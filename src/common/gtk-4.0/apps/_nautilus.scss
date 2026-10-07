@@ -1,0 +1,73 @@
+@use "../../colors" as *;
+@use "../shared" as *;
+
+.nautilus-list-view {
+	> overlay > scrolledwindow > columnview {
+		padding: 0;
+
+		> listview > row:not(:first-child) {
+			margin-top: -8px;
+		}
+	}
+
+	&.compact
+		> overlay
+		> scrolledwindow
+		> columnview
+		> listview
+		> row:not(:first-child) {
+		margin-top: -4px;
+	}
+}
+
+//
+.nautilus-network-view listview,
+.nautilus-list-view columnview > listview {
+	margin: 0;
+	padding: 0;
+
+	> row {
+		// OVERRIDE: O#12
+		border: none;
+		border-radius: 0;
+		margin: 0;
+	}
+}
+
+.nautilus-path-button {
+	margin: 0;
+
+	&.current-dir {
+		@extend %linked-horizontal-left;
+	}
+}
+
+nothing {
+	color: gtkalpha(shade($bg_color, 0.45), 0.3);
+}
+
+.nautilus-pathbar {
+	> scrolledwindow > viewport > box > box {
+		> label {
+			color: transparent;
+		}
+
+		&:not(:first-child) > button {
+			border-radius: 0;
+			border-image-width: 10px 0 10px 0;
+			border-width: 1px 0 1px 0;
+			box-shadow: inset -1px 0 $borders;
+
+			margin-left: -8px;
+		}
+
+		&:first-child > button {
+			@extend %linked-horizontal-left;
+			box-shadow: inset -1px 0 $borders;
+		}
+	}
+
+	> menubutton > button {
+		@extend %linked-horizontal-right;
+	}
+}

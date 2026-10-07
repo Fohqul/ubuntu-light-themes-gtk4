@@ -1,0 +1,26 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "devDependencies": {
+        "@sass-fairy/list": "^1.2.5",
+        "@sass-fairy/string": "^1.3.3",
+        "prettier": "^3.9.9",
+      },
+    },
+  },
+  "packages": {
+    "@sass-fairy/exception": ["@sass-fairy/exception@1.1.2", "", {}, "sha512-J7dFIolWwNzLfNSDJd8SXhqSwCzL5veITkoVQNg9REeTt5Ufcs/QDJi+Iwjbj7yD7GruNPna+DfQoskUgm3GVw=="],
+
+    "@sass-fairy/list": ["@sass-fairy/list@1.2.5", "", { "dependencies": { "@sass-fairy/exception": "^1.0.0", "@sass-fairy/math": "^1.0.0", "@sass-fairy/meta": "^1.0.0" } }, "sha512-/0x26huLtW0XPUTzWRBUppQYv2nKcNImLDVWBCOfW4JIGzGKpNkumnYWbw2CD+EVXCw+ehDPQDIheGyCQ51r8A=="],
+
+    "@sass-fairy/math": ["@sass-fairy/math@1.0.4", "", { "dependencies": { "@sass-fairy/exception": "^1.0.0" } }, "sha512-gTleuSqE8x6/ir0jY/v/qsWk9u6L6i1bpxZRvR5d2qwMVjzGjeWekFMbQQF1/nxoKzzRDS3quTxJu+vfQQl7Fw=="],
+
+    "@sass-fairy/meta": ["@sass-fairy/meta@1.0.3", "", { "dependencies": { "@sass-fairy/exception": "^1.0.0" } }, "sha512-Q9mFeWWSranzHuZ3WnDAhQ+92RV58Z4PAvOuMeFX6ieX42QR8vgr0k1ZdgDa/Vz5xDTA33uQxodqdTDWNmYnTg=="],
+
+    "@sass-fairy/string": ["@sass-fairy/string@1.3.3", "", { "dependencies": { "@sass-fairy/exception": "^1.0.0", "@sass-fairy/list": "^1.0.0" } }, "sha512-7MZfqoQaMNWjl1xFLo8o7X7AP4iUawpfKWTkiEZQ+xgHqwkR1n6LNEbjl3ibJ4YV+4nysvy6jjl8KYYWz3GY5Q=="],
+
+    "prettier": ["prettier@3.9.9", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg=="],
+  }
+}

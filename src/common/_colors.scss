@@ -1,0 +1,538 @@
+@use "sass:string";
+
+$theme: "Ambiance" !default;
+$isRadiance: $theme == "Radiance";
+
+@function replace-slice($string, $start, $end, $replacement) {
+	@return string.slice($string, 1, $start - 1) + $replacement +
+		string.slice($string, $end, string.length($string));
+}
+
+@function if-radiance($a, $b) {
+	@return if(sass($isRadiance): $a; else: $b;);
+}
+
+@function gtkalpha($color, $number) {
+	@return rgb(from $color r g b / calc(alpha * $number));
+}
+
+@function gtkmix($color1, $color2, $number) {
+	@if $number < 0 or $number > 1 {
+		@error "Not implemented";
+	}
+	@return color-mix(in srgb, $color1, $color2 ($number * 100%));
+}
+
+@function shade($color, $number) {
+	@return hsl(from $color h calc(s * $number) calc(l * $number));
+}
+
+@function lighter($color) {
+	@return shade($color, 1.3);
+}
+
+@function darker($color) {
+	@return shade($color, 0.7);
+}
+
+// START gtk-main.css
+/*default color scheme */
+$bg_color: #f2f1f0;
+$fg_color: #4c4c4c;
+$dark_bg_color: if-radiance(#dfd7cf, #3c3b37);
+$dark_fg_color: if-radiance($fg_color, #dfdbd2);
+$base_color: #ffffff;
+$text_color: #3c3c3c;
+$selected_bg_color: #f07746;
+$selected_fg_color: #ffffff;
+$tooltip_bg_color: #000000;
+$tooltip_fg_color: #ffffff;
+$backdrop_text_color: gtkmix($base_color, $text_color, 0.8);
+$dark_borders: shade($dark_bg_color, 0.9);
+
+$active_shadow_color: black;
+$inactive_shadow_color: gtkalpha(black, 0.3);
+
+/* theme common colors */
+$button_text_shadow: gtkalpha(white, 0.4);
+$button_bg_color: shade($bg_color, 1.02); /*shade(#cdcdcd, 1.08);*/
+$notebook_button_bg_color: shade($bg_color, 1.02);
+$button_insensitive_bg_color: gtkmix($button_bg_color, $bg_color, 0.6);
+
+$backdrop_fg_color: gtkmix($bg_color, $fg_color, 0.8);
+$backdrop_dark_fg_color: gtkmix($dark_bg_color, $dark_fg_color, 0.75);
+/*$backdrop_dark_bg_color: gtkmix($dark_bg_color, $dark_fg_color, 0.75);*/
+$backdrop_selected_bg_color: shade($bg_color, 0.92);
+$backdrop_selected_fg_color: $fg_color;
+$backdrop_filling_bg: #b0b0b0;
+// $backdrop_insensitive_color: gtkmix($backdrop_fg_color, $fg_color, 0.6);
+
+$focus_color: gtkalpha($selected_bg_color, 0.5);
+$focus_bg_color: gtkalpha($selected_bg_color, 0.1);
+
+$scale_highlight_bg: #df784e;
+
+$shadow_color: gtkalpha(black, 0.5);
+
+$osd_fg_color: #eeeeec;
+$osd_bg_color: gtkalpha(#202526, 0.7);
+$osd_border_color: gtkalpha(black, 0.7);
+
+$scrollbar_track_color: gtkmix($base_color, black, 0.1); /* #e6e6e6 */
+// END gtk-main.css
+
+//apps rely on some named colors to be exported
+/* GTK NAMED COLORS
+   ----------------
+   use responsibly! */
+
+/*
+widget text/foreground color */
+$theme_fg_color: $fg_color;
+@define-color theme_fg_color #{$theme_fg_color};
+
+/*
+text color for entries, views and content in general */
+@define-color theme_text_color #{$fg_color};
+
+/*
+widget base background color */
+$theme_bg_color: $bg_color;
+@define-color theme_bg_color #{$theme_bg_color};
+
+/*
+text widgets and the like base background color */
+$theme_base_color: $base_color;
+@define-color theme_base_color #{"" + $theme_base_color};
+
+/*
+base background color of selections */
+$theme_selected_bg_color: $selected_bg_color;
+@define-color theme_selected_bg_color #{$theme_selected_bg_color};
+
+/*
+text/foreground color of selections */
+@define-color theme_selected_fg_color #{"" + $selected_fg_color};
+
+/*
+base background color of insensitive widgets */
+@define-color insensitive_bg_color #{shade($bg_color, 0.95)};
+
+/*
+text foreground color of insensitive widgets */
+$insensitive_fg_color: shade($bg_color, 0.6);
+@define-color insensitive_fg_color #{$insensitive_fg_color};
+
+/*
+insensitive text widgets and the like base background color */
+@define-color insensitive_base_color #{"" + $theme_base_color};
+
+/*
+widget text/foreground color on backdrop windows */
+@define-color theme_unfocused_fg_color #{$backdrop_fg_color};
+
+/*
+text color for entries, views and content in general on backdrop windows */
+@define-color theme_unfocused_text_color #{$text_color}; // was @backdrop_text_color, but that was never defined anywhere?
+
+/*
+widget base background color on backdrop windows */
+@define-color theme_unfocused_bg_color #{$theme_bg_color};
+
+/*
+text widgets and the like base background color on backdrop windows */
+@define-color theme_unfocused_base_color #{"" + $theme_base_color};
+
+/*
+base background color of selections on backdrop windows */
+@define-color theme_unfocused_selected_bg_color #{$backdrop_selected_bg_color};
+
+/*
+text/foreground color of selections on backdrop windows */
+@define-color theme_unfocused_selected_fg_color #{$backdrop_selected_fg_color};
+
+/*
+insensitive color on backdrop windows*/
+@define-color unfocused_insensitive_color #{$insensitive_fg_color};
+
+/*
+widgets main borders color */
+$borders: gtkalpha(shade($bg_color, 0.45), 0.3);
+@define-color borders #{$borders};
+
+/*
+widgets main borders color on backdrop windows */
+@define-color unfocused_borders #{$borders};
+
+/*
+these are pretty self explicative */
+@define-color warning_color #eca918;
+$error_color: #df382c;
+@define-color error_color #{$error_color};
+$success_color: #38b44a;
+@define-color success_color #{$success_color};
+// DEVIATION: mirroring `*:selected` etc. rule for these
+$accent_bg_color: $selected_bg_color;
+@define-color accent_bg_color #{$accent_bg_color};
+$accent_fg_color: $selected_fg_color;
+@define-color accent_fg_color #{"" + $accent_fg_color};
+// DEVIATION: originals never defined this, but it can be
+// inferred from how `.destructive-action` is styled
+@define-color destructive_color #{$error_color};
+
+//WM
+
+/*
+these colors are exported for the window manager and shouldn't be used in applications,
+read if you used those and something break with a version upgrade you're on your own... */
+$wm_title: $dark_fg_color;
+@define-color wm_title #{$wm_title};
+$wm_unfocused_title: #979797;
+@define-color wm_unfocused_title #{$wm_unfocused_title};
+@define-color wm_highlight rgba(0, 0, 0, 0.1);
+@define-color wm_borders_edge rgba(0, 0, 0, 0.1);
+
+$wm_bg_a: shade($dark_bg_color, 1.5);
+@define-color wm_bg_a #{$wm_bg_a};
+$wm_bg_b: shade($dark_bg_color, 1.04);
+@define-color wm_bg_b #{$wm_bg_b};
+
+$wm_shadow: gtkalpha($active_shadow_color, 0.85);
+@define-color wm_shadow #{$wm_shadow};
+@define-color wm_border #{gtkalpha(black, 0.18)};
+
+@define-color wm_button_hover_color_a #{shade(#fdfdfd, 1.3)};
+@define-color wm_button_hover_color_b #fdfdfd;
+@define-color wm_button_active_color_a #{shade(#fdfdfd, 0.85)};
+@define-color wm_button_active_color_b #{shade(#fdfdfd, 0.89)};
+@define-color wm_button_active_color_c #{shade(#fdfdfd, 0.9)};
+
+//FIXME this is really an API
+
+/* content view background such as thumbnails view in Photos or Boxes */
+@define-color content_view_bg #ffffff;
+
+/* Very contrasty background for text views (@theme_text_color foreground) */
+// @define-color text_view_bg if($variant == 'light', $base_color, darken($base_color,6%))};
+@define-color text_view_bg #{"" + $base_color};
+
+// START public-colors.css
+/* misc colors used by gtk+
+ *
+ * Gtk doesn't currently expand color variables for style properties. Thus,
+ * gtk-widgets.css uses literal color names, but includes a comment containing
+ * the name of the variable. Please remember to change values there as well
+ * when changing one of the variables below.
+ */
+$info_fg_color: rgb(181, 171, 156);
+@define-color info_fg_color #{$info_fg_color};
+$info_bg_color: rgb(252, 252, 189);
+@define-color info_bg_color #{$info_bg_color};
+$warning_fg_color: rgb(173, 120, 41);
+@define-color warning_fg_color #{$warning_fg_color};
+$warning_bg_color: rgb(250, 173, 61);
+@define-color warning_bg_color #{$warning_bg_color};
+$question_fg_color: rgb(97, 122, 214);
+@define-color question_fg_color #{$question_fg_color};
+$question_bg_color: rgb(138, 173, 212);
+@define-color question_bg_color #{$question_bg_color};
+$error_fg_color: rgb(235, 235, 235);
+@define-color error_fg_color #{$error_fg_color};
+$error_bg_color: rgb(223, 56, 44);
+@define-color error_bg_color #{$error_bg_color};
+$link_color: #007aa6;
+@define-color link_color #{$link_color};
+// END public-colors.css
+
+// START gtk-main.css
+$progressbar_fill_a: shade($selected_bg_color, 1.07);
+$progressbar_fill_b: shade(
+	gtkmix($theme_selected_bg_color, $selected_bg_color, 0.1),
+	0.91
+);
+$button_border_active: shade($selected_bg_color, 0.95);
+$progressbar_backdrop_fill_a: shade($backdrop_selected_bg_color, 1.07);
+$progressbar_backdrop_fill_b: shade(
+	gtkmix($backdrop_selected_bg_color, grey, 0.1),
+	0.91
+);
+$button_border_backdrop_active: shade($backdrop_selected_bg_color, 0.95);
+$panel_lighter_color: shade($dark_bg_color, 1.4);
+$panel_darker_color: shade($dark_bg_color, 0.96);
+$maximized_header_color: shade($dark_bg_color, if-radiance(1.1, 1.3));
+$places_sidebar_bg: shade($dark_bg_color, if-radiance(1.1, 1.56));
+$places_sidebar_backdrop_bg: $wm_bg_b;
+$places_sidebar_fg_color: if-radiance($fg_color, $selected_fg_color);
+$places_sidebar_selected_bg_color: $selected_bg_color;
+
+$suggested_action_bg: #38b44a;
+// END gtk-main.css
+
+// Following is heavily adapted from Libadwaita, as some applications
+// (e.g. GNOME Software) expect that they're defined.
+// Prioritising developer intent (since they target Libadwaita) here
+// so as to not break things, and because there isn't really any
+// Ambiance/Radiance prescription to infer from for just generic colours.
+
+// START _palette.scss
+$adw_colours: (
+	"blue_1": #99c1f1,
+	"blue_2": #62a0ea,
+	"blue_3": #3584e4,
+	"blue_4": #1c71d8,
+	"blue_5": #1a5fb4,
+	"green_1": #8ff0a4,
+	"green_2": #57e389,
+	"green_3": #33d17a,
+	"green_4": #2ec27e,
+	"green_5": #26a269,
+	"yellow_1": #f9f06b,
+	"yellow_2": #f8e45c,
+	"yellow_3": #f6d32d,
+	"yellow_4": #f5c211,
+	"yellow_5": #e5a50a,
+	"orange_1": #ffbe6f,
+	"orange_2": #ffa348,
+	"orange_3": #ff7800,
+	"orange_4": #e66100,
+	"orange_5": #c64600,
+	"red_1": #f66151,
+	"red_2": #ed333b,
+	"red_3": #e01b24,
+	"red_4": #c01c28,
+	"red_5": #a51d2d,
+	"purple_1": #dc8add,
+	"purple_2": #c061cb,
+	"purple_3": #9141ac,
+	"purple_4": #813d9c,
+	"purple_5": #613583,
+	"brown_1": #cdab8f,
+	"brown_2": #b5835a,
+	"brown_3": #986a44,
+	"brown_4": #865e3c,
+	"brown_5": #63452c,
+	"light_1": #ffffff,
+	"light_2": #f6f5f4,
+	"light_3": #deddda,
+	"light_4": #c0bfbc,
+	"light_5": #9a9996,
+	"dark_1": #77767b,
+	"dark_2": #5e5c64,
+	"dark_3": #3d3846,
+	"dark_4": #241f31,
+	"dark_5": #000000,
+);
+
+:root {
+	@each $name, $colour in $adw_colours {
+		// replace _ with -
+		--#{replace-slice($name, -2, -1, "-")}: #{$colour};
+	}
+}
+
+@each $name, $colour in $adw_colours {
+	@define-color #{$name} #{"" + $colour};
+}
+// END _palette.scss
+
+// START _colors.scss
+/* GTK NAMED COLORS
+   ----------------
+   use responsibly! */
+
+// Sass thinks we're using the colors in the variables as strings and may shoot
+// warning, it's innocuous and can be defeated by using #{"" + $var}.
+
+// These are the colors apps can override. We define the defaults here and
+// define variables for them in _colors.scss
+
+// destructive-action buttons
+@define-color destructive_bg_color @red_3;
+@define-color destructive_fg_color white;
+
+// Levelbars, entries, labels and infobars. These don't need text colors
+
+// `$success_color` isn't necessarily meant to be
+// a background colour, however I'm confident using
+// it as such since `$suggested_action_bg` *is*, and
+// it's literally the exact same value
+$success_bg_color: $success_color;
+@define-color success_bg_color #{$success_bg_color};
+// Continuing with the above logic, since
+// `button.suggested-action`s inside `headerbar`s
+// have `white` labels, the `success` foreground
+// colour can be inferred to also be `white`
+$success_fg_color: white;
+@define-color success_fg_color #{"" + $success_fg_color};
+
+@define-color accent_color #{$selected_bg_color};
+
+// Window
+// Adapted from `.background`
+$window_bg_color: $bg_color;
+@define-color window_bg_color #{$window_bg_color};
+$window_fg_color: $fg_color;
+@define-color window_fg_color #{$window_fg_color};
+
+// Views - e.g. text view or tree view
+@define-color view_bg_color #ffffff;
+@define-color view_fg_color RGB(0 0 6 / 80%);
+
+// Header bar, search bar, tab bar
+@define-color headerbar_bg_color #ffffff;
+@define-color headerbar_fg_color RGB(0 0 6 / 80%);
+@define-color headerbar_border_color RGB(0 0 6 / 80%);
+@define-color headerbar_backdrop_color @window_bg_color;
+@define-color headerbar_shade_color RGB(0 0 6 / 12%);
+@define-color headerbar_darker_shade_color RGB(0 0 6 / 12%);
+
+// Split pane views
+@define-color sidebar_bg_color #ebebed;
+@define-color sidebar_fg_color RGB(0 0 6 / 80%);
+@define-color sidebar_backdrop_color #f2f2f4;
+@define-color sidebar_shade_color RGB(0 0 6 / 7%);
+@define-color sidebar_border_color RGB(0 0 6 / 7%);
+
+@define-color secondary_sidebar_bg_color #f3f3f5;
+@define-color secondary_sidebar_fg_color RGB(0 0 6 / 80%);
+@define-color secondary_sidebar_backdrop_color #f6f6fa;
+@define-color secondary_sidebar_shade_color RGB(0 0 6 / 7%);
+@define-color secondary_sidebar_border_color RGB(0 0 6 / 7%);
+
+// Cards, boxed lists
+$card_bg_color: white;
+@define-color card_bg_color #{"" + $card_bg_color};
+@define-color card_fg_color RGB(0 0 6 / 80%);
+@define-color card_shade_color RGB(0 0 6 / 7%);
+
+// Dialogs
+@define-color dialog_bg_color #fafafb;
+@define-color dialog_fg_color RGB(0 0 6 / 80%);
+
+// Popovers
+@define-color popover_bg_color #ffffff;
+@define-color popover_fg_color RGB(0 0 6 / 80%);
+@define-color popover_shade_color RGB(0 0 6 / 7%);
+
+// Thumbnails
+@define-color thumbnail_bg_color #ffffff;
+@define-color thumbnail_fg_color RGB(0 0 6 / 80%);
+
+// Miscellaneous
+@define-color shade_color RGB(0 0 6 / 7%);
+@define-color scrollbar_outline_color white;
+
+:root {
+	--standalone-color-oklab: min(l, 0.5) a b;
+}
+
+:root {
+	--accent-blue: #3584e4;
+	--accent-teal: #2190a4;
+	--accent-green: #3a944a;
+	--accent-yellow: #c88800;
+	--accent-orange: #ed5b00;
+	--accent-red: #e62d42;
+	--accent-pink: #d56199;
+	--accent-purple: #9141ac;
+	--accent-slate: #6f8396;
+
+	--accent-bg-color: @accent_bg_color;
+	--accent-fg-color: @accent_fg_color;
+	--accent-color: oklab(
+		from var(--accent-bg-color) var(--standalone-color-oklab)
+	);
+
+	--destructive-bg-color: @destructive_bg_color;
+	--destructive-fg-color: @destructive_fg_color;
+	--destructive-color: oklab(
+		from var(--destructive-bg-color) var(--standalone-color-oklab)
+	);
+
+	--success-bg-color: @success_bg_color;
+	--success-fg-color: @success_fg_color;
+	--success-color: oklab(
+		from var(--success-bg-color) var(--standalone-color-oklab)
+	);
+
+	--warning-bg-color: @warning_bg_color;
+	--warning-fg-color: @warning_fg_color;
+	--warning-color: oklab(
+		from var(--warning-bg-color) var(--standalone-color-oklab)
+	);
+
+	--error-bg-color: @error_bg_color;
+	--error-fg-color: @error_fg_color;
+	--error-color: oklab(
+		from var(--error-bg-color) var(--standalone-color-oklab)
+	);
+
+	--window-bg-color: @window_bg_color;
+	--window-fg-color: @window_fg_color;
+
+	--view-bg-color: @view_bg_color;
+	--view-fg-color: @view_fg_color;
+
+	--headerbar-bg-color: @headerbar_bg_color;
+	--headerbar-fg-color: @headerbar_fg_color;
+	--headerbar-border-color: @headerbar_border_color;
+	--headerbar-backdrop-color: @headerbar_backdrop_color;
+	--headerbar-shade-color: @headerbar_shade_color;
+	--headerbar-darker-shade-color: @headerbar_darker_shade_color;
+
+	--sidebar-bg-color: @sidebar_bg_color;
+	--sidebar-fg-color: @sidebar_fg_color;
+	--sidebar-backdrop-color: @sidebar_backdrop_color;
+	--sidebar-border-color: @sidebar_border_color;
+	--sidebar-shade-color: @sidebar_shade_color;
+
+	--secondary-sidebar-bg-color: @secondary_sidebar_bg_color;
+	--secondary-sidebar-fg-color: @secondary_sidebar_fg_color;
+	--secondary-sidebar-backdrop-color: @secondary_sidebar_backdrop_color;
+	--secondary-sidebar-border-color: @secondary_sidebar_border_color;
+	--secondary-sidebar-shade-color: @secondary_sidebar_shade_color;
+
+	--card-bg-color: @card_bg_color;
+	--card-fg-color: @card_fg_color;
+	--card-shade-color: @card_shade_color;
+
+	--dialog-bg-color: @dialog_bg_color;
+	--dialog-fg-color: @dialog_fg_color;
+
+	--popover-bg-color: @popover_bg_color;
+	--popover-fg-color: @popover_fg_color;
+	--popover-shade-color: @popover_shade_color;
+
+	--thumbnail-bg-color: @thumbnail_bg_color;
+	--thumbnail-fg-color: @thumbnail_fg_color;
+
+	--shade-color: @shade_color;
+	--scrollbar-outline-color: @scrollbar_outline_color;
+
+	--active-toggle-bg-color: #ffffff;
+	--active-toggle-fg-color: rgb(0 0 6 / 80%);
+
+	--overview-bg-color: #f3f3f5;
+	--overview-fg-color: rgb(0 0 6 / 80%);
+}
+
+// Other colors
+
+$border_opacity: 15%;
+$border_opacity_hc: 50%;
+
+:root {
+	--border-color: #{$borders};
+	--border-opacity: #{$border_opacity};
+	--dim-opacity: 55%;
+	--disabled-opacity: 50%;
+}
+
+@media (prefers-contrast: more) {
+	:root {
+		--border-opacity: #{$border_opacity_hc};
+		--dim-opacity: 90%;
+		--disabled-opacity: 40%;
+	}
+}
+// END _colors.scss
