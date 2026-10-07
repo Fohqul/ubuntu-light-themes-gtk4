@@ -4187,9 +4187,11 @@ switch {
 			shade($bg_color, 0.93),
 			shade($bg_color, 0.99)
 		);
+	}
 
+	&:backdrop {
 		&,
-		&:backdrop {
+		&:disabled {
 			background-image: none;
 			background-color: shade($bg_color, 0.95);
 		}
