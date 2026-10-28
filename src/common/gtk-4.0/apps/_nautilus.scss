@@ -38,7 +38,7 @@
 	margin: 0;
 
 	&.current-dir {
-		@extend %linked-horizontal-left;
+		@include linked-horizontal-left;
 	}
 }
 
@@ -62,12 +62,12 @@ nothing {
 		}
 
 		&:first-child > button {
-			@extend %linked-horizontal-left;
+			@include linked-horizontal-left;
 			box-shadow: inset -1px 0 $borders;
 		}
 	}
 
 	> menubutton > button {
-		@extend %linked-horizontal-right;
+		@include linked-horizontal-right;
 	}
 }

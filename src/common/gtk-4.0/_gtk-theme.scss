@@ -573,7 +573,7 @@ splitbutton.flat > menubutton,
 		> text,
 		> button,
 		> combobox box.linked button {
-			@extend %linked-horizontal-middle;
+			@include linked-horizontal-middle;
 		}
 
 		> entry:first-child,
@@ -584,7 +584,7 @@ splitbutton.flat > menubutton,
 		> button:last-child:dir(rtl),
 		> combobox:first-child box.linked button,
 		> combobox:last-child box.linked button:dir(rtl) {
-			@extend %linked-horizontal-left;
+			@include linked-horizontal-left;
 		}
 
 		> entry:last-child,
@@ -595,7 +595,7 @@ splitbutton.flat > menubutton,
 		> button:first-child:dir(rtl),
 		> combobox:last-child box.linked button,
 		> combobox:first-child box.linked button:dir(rtl) {
-			@extend %linked-horizontal-right;
+			@include linked-horizontal-right;
 		}
 	}
 
@@ -611,7 +611,7 @@ splitbutton.flat > menubutton,
 		&,
 		// ????? did they need specificity only for right-to-left
 		&:dir(rtl) {
-			@extend %linked-only;
+			@include linked-only;
 		}
 	}
 
@@ -644,21 +644,21 @@ splitbutton.flat > menubutton,
 		> text,
 		> button,
 		> combobox box.linked button {
-			@extend %linked-vertical-middle;
+			@include linked-vertical-middle;
 		}
 
 		> entry:first-child,
 		> text:first-child,
 		> button:first-child,
 		> combobox:first-child box.linked button {
-			@extend %linked-vertical-top;
+			@include linked-vertical-top;
 		}
 
 		> entry:last-child,
 		> text:last-child,
 		> button:last-child,
 		> combobox:last-child box.linked button {
-			@extend %linked-vertical-bottom;
+			@include linked-vertical-bottom;
 		}
 
 		> entry:focus,
@@ -841,12 +841,12 @@ splitbutton {
 		// Reimplementing linked so we don't blow up css
 		> button:dir(ltr),
 		> menubutton > button:dir(rtl) {
-			@extend %linked-horizontal-left;
+			@include linked-horizontal-left;
 		}
 
 		> button:dir(rtl),
 		> menubutton > button:dir(ltr) {
-			@extend %linked-horizontal-right;
+			@include linked-horizontal-right;
 		}
 
 		> button:last-child,
@@ -4408,6 +4408,17 @@ avatar {
 			text-shadow: none;
 		}
 
+		text {
+			&,
+			&:backdrop,
+			&:disabled,
+			&:focus {
+				border: initial;
+			}
+		}
+	}
+
+	row {
 		&.button {
 			@extend %button;
 		}
@@ -4469,15 +4480,6 @@ avatar {
 					// OVERRIDE: O#8
 					border-width: 1px;
 				}
-			}
-		}
-
-		text {
-			&,
-			&:backdrop,
-			&:disabled,
-			&:focus {
-				border: initial;
 			}
 		}
 	}
@@ -4640,20 +4642,20 @@ toggle-group {
 	}
 
 	&:not(.flat) > toggle {
-		@extend %linked-horizontal-middle;
+		@include linked-horizontal-middle;
 
 		&:first-child:dir(ltr),
 		&:last-child:dir(rtl) {
-			@extend %linked-horizontal-left;
+			@include linked-horizontal-left;
 		}
 
 		&:last-child:dir(ltr),
 		&:first-child:dir(rtl) {
-			@extend %linked-horizontal-right;
+			@include linked-horizontal-right;
 		}
 
 		&:only-child {
-			@extend %linked-only;
+			@include linked-only;
 		}
 	}
 
