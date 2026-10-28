@@ -121,7 +121,23 @@ prompt() {
 
 config=${XDG_CONFIG_HOME:-$HOME/.config}
 if prompt "Would you like to apply app overrides? Some apps may not look correct without this. (Creates backup of, then sets \`$config/gtk-4.0\`)"; then
+	if prompt "Would you like the Ambiance theme? Answer no if you prefer Radiance."; then
+		theme=Ambiance
+	else
+		theme=Radiance
+	fi
+
 	if [[ -e "$config/gtk-4.0" ]]; then
+		if $symlink; then
+			# `echo "0"` because of earlier `set -e`
+			assets=$(readlink "$config/gtk-4.0/assets" || echo "0")
+			apps=$(readlink "$config/gtk-4.0/gtk.css" || echo "0")
+			if [[ "$assets" == "$SCRIPT_DIR/assets" && "$apps" == "$SCRIPT_DIR/dist/$theme/gtk-apps.css" ]]; then
+				echo "Already symlinked - skipping"
+				exit
+			fi
+		fi
+
 		while
 			# TOCTOU cannot truly be accounted for here,
 			# but worth at least a check
@@ -133,11 +149,6 @@ if prompt "Would you like to apply app overrides? Some apps may not look correct
 		mv "$config/gtk-4.0" "$backup"
 	fi
 
-	if prompt "Would you like the Ambiance theme? Answer no if you prefer Radiance."; then
-		theme=Ambiance
-	else
-		theme=Radiance
-	fi
 	mkdir -p "$config/gtk-4.0"
 	put "$SCRIPT_DIR/assets" "$config/gtk-4.0/assets"
 	put "$SCRIPT_DIR/dist/$theme/gtk-apps.css" "$config/gtk-4.0/gtk.css"
