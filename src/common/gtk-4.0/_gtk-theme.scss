@@ -5771,6 +5771,12 @@ headerbar,
 	popover separator {
 		@extend %separator;
 	}
+
+	// DEVIATION: seemingly, the window leaks out somewhat
+	// in GTK4, so expand the titlebar to cover most of it
+	margin-top: -1px;
+	margin-left: -1px;
+	margin-right: -1px;
 }
 
 // DEVIATION: originals styled `.inline-toolbar`, but since `toolbar`
